@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    networks: 
+      - api-net
+    volumes:
+      - data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    hostname: mongo
+    restart: always
+    networks:
+      - api-net
+    volumes:
+      - data:/data/db/
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    networks:
+      - api-net
+
+networks:
+  api-net:
+
+volumes:
+  data:
