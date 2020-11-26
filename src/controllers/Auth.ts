@@ -82,7 +82,7 @@ export class Auth extends Controller {
      * @memberof Auth
      */
     @All('/logout')
-    @Authenticated
+    @Authenticated()
     logout(req: Request, res: Response) {
         req.logout()
         this.ok<string>(res, 'ok')
@@ -98,7 +98,7 @@ export class Auth extends Controller {
      * @memberof Auth
      */
     @Get('/user')
-    @Authenticated
+    @Authenticated()
     async getUser(req: Request, res: Response) {
         this.ok<IUser>(res, clean(await User.findOne({ _id: (req.user as IUser)._id })))
     }

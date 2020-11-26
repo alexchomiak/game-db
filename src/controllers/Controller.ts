@@ -1,7 +1,7 @@
 import { IRouterHandler, IRouterMatcher, Request, RequestHandler, Response, Router } from 'express'
 import { Middleware } from '../util/utils'
 
-export const Authenticated = (
+export const Authenticated = (redirect_uri?: string) => (
     target: Controller,
     propertyKey: string,
     descriptor: PropertyDescriptor
@@ -13,7 +13,8 @@ export const Authenticated = (
         const req: Request = args[0]
         const res: Response = args[1]
         if (!req.user) {
-            if (process.env.NODE_ENV == 'production')
+            if(redirect_uri != undefined) res.redirect(redirect_uri)
+            else if (process.env.NODE_ENV == 'production')
                 res.status(404).send('Specified path not found.')
             else res.status(401).send('This URL requires authentication.')
         } else originalMethod.apply(context, args)
@@ -189,5 +190,9 @@ export abstract class Controller {
         return response.status(500).json({
             message: error.toString()
         })
+    }
+    
+    public render(response: Response, view: string, data: Object) {
+        response.render(view, data)
     }
 }

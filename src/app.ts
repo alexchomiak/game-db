@@ -14,6 +14,9 @@ import bcrypt from 'bcrypt'
 import { Middleware, clean } from './util/utils'
 import { Auth } from './controllers/Auth'
 import * as redis from 'redis'
+import { Content } from './controllers/Content'
+import handlebars from 'express-handlebars'
+import path from 'path'
 declare module 'express' {
     export interface Request {
         user?: IUser
@@ -134,12 +137,26 @@ export default class App {
             })
         })
 
+        // * Setup Handlebars
+        this.#app.engine('hbs', handlebars({
+            layoutsDir:path.join(__dirname , 'views/layouts/'),
+            defaultLayout: "index",
+            extname: '.hbs'
+        }))
+        this.#app.set('views', path.join(__dirname , 'views'));
+
+        this.#app.set('view engine', 'hbs')
+
+     
+
+        console.log()
+
         // * Bind middlewares
         this.bindMiddlewares(middlewares)
 
         // * Create controllers
         const authCtrl = new Auth('/auth', passportInstance)
-
-        this.bindControllers([authCtrl])
+        const contentCtrl = new Content('/' )
+        this.bindControllers([authCtrl, contentCtrl])
     }
 }

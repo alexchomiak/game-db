@@ -15,7 +15,8 @@
         "watch-node": "nodemon dist/server.js",
         "watch": "npm run build && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
         "build-ts": "tsc",
-        "watch-ts": "tsc -w",
+        "watch-ts": "tsc-watch --onSuccess \"npm run copy-views\"",
+        "copy-views": "rm -rf dist/views && cp -r src/views dist/views",
         "copy-static-assets": "ts-node copyStaticAssets.ts",
         "debug": "npm run build && npm run watch-debug",
         "serve-debug": "nodemon --inspect dist/server.js",
@@ -28,6 +29,7 @@
         "@types/bcrypt": "^3.0.0",
         "@types/connect-redis": "0.0.13",
         "@types/cors": "^2.8.6",
+        "@types/express-handlebars": "^3.1.0",
         "async": "^3.1.0",
         "axios": "^0.20.0",
         "bcrypt": "^5.0.0",
@@ -42,6 +44,7 @@
         "errorhandler": "^1.5.1",
         "express": "^4.17.1",
         "express-flash": "0.0.2",
+        "express-handlebars": "^5.2.0",
         "express-session": "^1.16.2",
         "express-validator": "^6.2.0",
         "fbgraph": "^1.4.4",
@@ -54,6 +57,7 @@
         "passport-local": "^1.0.0",
         "pug": "^2.0.4",
         "redis": "^3.0.2",
+        "tsc-watch": "^4.2.9",
         "winston": "^3.2.1"
     },
     "devDependencies": {
