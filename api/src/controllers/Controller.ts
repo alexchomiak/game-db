@@ -68,7 +68,7 @@ const RouteDecorator = (method: string, path: string, middlewares?: Middleware[]
             path,
             method,
             middlewares: middlewares && middlewares.length > 0 ? middlewares : [],
-            handler: descriptor.value
+            handler: descriptor.value as (req: Request, res: Response) => void
         })
         return descriptor
     }

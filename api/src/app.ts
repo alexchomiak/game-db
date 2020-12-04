@@ -14,9 +14,13 @@ import bcrypt from 'bcrypt'
 import { Middleware, clean } from './util/utils'
 import { Auth } from './controllers/Auth'
 import * as redis from 'redis'
-import { Content } from './controllers/Content'
+import {  Postgres } from './controllers/Postgres'
 import handlebars from 'express-handlebars'
 import path from 'path'
+import pg from 'pg'
+
+
+
 declare module 'express' {
     export interface Request {
         user?: IUser
@@ -147,16 +151,39 @@ export default class App {
 
         this.#app.set('view engine', 'hbs')
 
-     
+        
+        // * Create PostgresSQL client
+        await new Promise<void>((res) => {
+            const pool = new pg.Pool({
+            user: 'postgres',
+            host: 'localhost',
+            database: 'postgres',
+            password: 'cs480',
+                port: 5432
+            })
+            
+            pool.query('CREATE DATABASE finalproject' ,(error, results) => {
+                res()
+            })
+        })
 
-        console.log()
+        const connection = new pg.Pool({
+            user: 'postgres',
+            host: 'localhost',
+            database: 'finalproject',
+            password: 'cs480',
+                port: 5432
+            })
+        await connection.connect()
+        
+     
 
         // * Bind middlewares
         this.bindMiddlewares(middlewares)
 
         // * Create controllers
         const authCtrl = new Auth('/auth', passportInstance)
-        const contentCtrl = new Content('/' )
-        this.bindControllers([authCtrl, contentCtrl])
+        const postgresCtrl = new Postgres('/pg', connection)
+        this.bindControllers([authCtrl, postgresCtrl])
     }
 }

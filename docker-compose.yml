@@ -3,7 +3,6 @@ version: '3.7'
 services:
   redis:
     image: redis
-    container_name: redis
     restart: always
     networks: 
       - api-net
@@ -15,7 +14,6 @@ services:
 
   mongo:
     image: mongo
-    container_name: mongo
     hostname: mongo
     restart: always
     networks:
@@ -36,9 +34,24 @@ services:
       - mongo
     networks:
       - api-net
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=cs480
+      - POSTGRES_DB=finalproject
+    ports:
+      - 5432:5432
+    networks:
+      - api-net
+
 
 networks:
   api-net:
 
 volumes:
   data:
+  pgdata:

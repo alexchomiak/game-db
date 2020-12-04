@@ -5,7 +5,7 @@ import App from './app'
 /**
  * Start Express server.
  */
-const app = new App(parseInt(process.env.API_PORT) || 5000, '/', 'CS480 Final Project')
+const app = new App(parseInt(process.env.API_PORT) || 5000, '/api', 'CS480 Final Project')
 
 ;(async () => {
     await app.init()
