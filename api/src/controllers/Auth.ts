@@ -7,6 +7,14 @@ import { clean } from '../util/utils'
 export class Auth extends Controller {
     private authenticator: passport.Authenticator
 
+    /**
+     *Creates an instance of Auth Controller
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @param {string} path
+     * @param {passport.Authenticator} authenticator
+     * @memberof Auth
+     */
     constructor(path: string, authenticator: passport.Authenticator) {
         super(path)
         this.authenticator = authenticator
@@ -15,7 +23,7 @@ export class Auth extends Controller {
     /**
      * @description POST /api/auth/register route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res
@@ -49,7 +57,7 @@ export class Auth extends Controller {
     /**
      * @description POST /api/auth/login route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res
@@ -75,7 +83,7 @@ export class Auth extends Controller {
     /**
      * @description ALL /api/auth/logout route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res
@@ -91,7 +99,7 @@ export class Auth extends Controller {
     /**
      * @description GET /api/auth/user route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res

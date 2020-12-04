@@ -24,6 +24,14 @@ const User_1 = __importDefault(require("../models/User"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const utils_1 = require("../util/utils");
 class Auth extends Controller_1.Controller {
+    /**
+     *Creates an instance of Auth Controller
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @param {string} path
+     * @param {passport.Authenticator} authenticator
+     * @memberof Auth
+     */
     constructor(path, authenticator) {
         super(path);
         this.authenticator = authenticator;
@@ -31,7 +39,7 @@ class Auth extends Controller_1.Controller {
     /**
      * @description POST /api/auth/register route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res
@@ -61,7 +69,7 @@ class Auth extends Controller_1.Controller {
     /**
      * @description POST /api/auth/login route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res
@@ -83,7 +91,7 @@ class Auth extends Controller_1.Controller {
     /**
      * @description ALL /api/auth/logout route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res
@@ -96,7 +104,7 @@ class Auth extends Controller_1.Controller {
     /**
      * @description GET /api/auth/user route handler
      * @author Alex Chomiak
-     * @date 2020-09-23
+     * @date 2020-11-23
      * @private
      * @param {Request} req
      * @param {Response} res

@@ -18,10 +18,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Postgres = void 0;
 const Controller_1 = require("./Controller");
 class Postgres extends Controller_1.Controller {
+    /**
+     *Creates an instance of Postgres Controller
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @param {string} path
+     * @param {Pool} pgClient
+     * @memberof Postgres
+     */
     constructor(path, pgClient) {
         super(path);
         this.client = pgClient;
     }
+    /**
+     * @description Wrapper that Queries PG database with queryStr
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @private
+     * @param {string} queryStr
+     * @returns {Promise<QueryResult<any>>}
+     * @memberof Postgres
+     */
     query(queryStr) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((res, rej) => this.client.query(queryStr, (err, result) => {
@@ -32,9 +49,14 @@ class Postgres extends Controller_1.Controller {
             }));
         });
     }
-    base(req, res) {
-        res.send("POSTGRES DB!");
-    }
+    /**
+     * @description Post request that allows for query by API user
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
     makeQuery(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { query } = req.body;
@@ -46,6 +68,14 @@ class Postgres extends Controller_1.Controller {
             }
         });
     }
+    /**
+     * @description Returns all game Genres in dataset
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
     genres(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -56,26 +86,54 @@ class Postgres extends Controller_1.Controller {
             }
         });
     }
+    /**
+     * @description Returns top n games from dataset. User can specify Genre in query string
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
     topGames(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 this.ok(res, (yield this.query(`select Title, AVG(score) as AverageScore, Genre, EditorsChoice, ReleaseYear from reviews 
-            ${req.query.genre ? `WHERE genre='${req.query.genre}' ` : ''}
-            group by title, genre, editorschoice, releaseyear 
-            order by AVG(score) desc, releaseyear desc, title desc 
-            limit ${req.params.num};`)).rows);
+                    ${req.query.genre ? `WHERE genre='${req.query.genre}' ` : ''}
+                    group by title, genre, editorschoice, releaseyear 
+                    order by AVG(score) desc, releaseyear desc, title desc 
+                    limit ${req.params.num};`)).rows);
             }
             catch (err) {
-                console.log(err);
                 this.clientError(res, err.toString());
             }
         });
     }
-    genre() { }
+    /**
+     * @description Allows user to search for reviews by game title
+     * @author Alex Chomiak
+     * @date 2020-12-03
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getReviews(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.query.q) {
+                this.clientError(res, "You must specify a text query q to obtain reviews for");
+                return;
+            }
+            else {
+                console.log(req.query.q);
+                try {
+                    this.ok(res, (yield this.query(`select * from reviews where title like '%${req.query.q}%' order by score desc`)).rows);
+                }
+                catch (err) {
+                    this.clientError(res, err.toString());
+                }
+            }
+        });
+    }
 }
-__decorate([
-    Controller_1.Get('/')
-], Postgres.prototype, "base", null);
 __decorate([
     Controller_1.Post("/query")
 ], Postgres.prototype, "makeQuery", null);
@@ -86,7 +144,7 @@ __decorate([
     Controller_1.Get("/games/top/:num")
 ], Postgres.prototype, "topGames", null);
 __decorate([
-    Controller_1.Get("/games/:genre")
-], Postgres.prototype, "genre", null);
+    Controller_1.Get("/search")
+], Postgres.prototype, "getReviews", null);
 exports.Postgres = Postgres;
 //# sourceMappingURL=Postgres.js.map
