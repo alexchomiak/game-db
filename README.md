@@ -9,4 +9,6 @@ Clark Chen
 Jigar Patel
 
 ## Getting Started
-TODO
+- Start up docker for DB servers: `docker-compose up -d`
+- Install api dependencies: `npm i --prefix ./api`
+- Run api service: `npm start --prefix ./api`
