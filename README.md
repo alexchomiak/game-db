@@ -11,4 +11,5 @@ Jigar Patel
 ## Getting Started
 - Start up docker for DB servers: `docker-compose up -d`
 - Install api dependencies: `npm i --prefix ./api`
+- Build api: `npm run build --prefix ./api`
 - Run api service: `npm start --prefix ./api`
