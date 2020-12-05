@@ -61,7 +61,8 @@ class Postgres extends Controller_1.Controller {
         return __awaiter(this, void 0, void 0, function* () {
             const { query } = req.body;
             try {
-                this.ok(res, yield this.query(query));
+                const queryResult = (yield this.query(query)).rows;
+                this.ok(res, queryResult);
             }
             catch (err) {
                 this.clientError(res, err.toString());
@@ -80,6 +81,25 @@ class Postgres extends Controller_1.Controller {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 this.ok(res, (yield this.query('select DISTINCT genre from reviews;')).rows.map(entry => entry.genre));
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
+    /**
+     * @description Returns all gameing platforms in dataset
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getPlatforms(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const queryResult = (yield this.query('select DISTINCT platform from reviews;')).rows.map(entry => entry.platform);
+                this.ok(res, queryResult);
             }
             catch (err) {
                 this.clientError(res, err.toString());
@@ -133,6 +153,221 @@ class Postgres extends Controller_1.Controller {
             }
         });
     }
+    /**
+     * @description Search for games by platform
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getGamesByPlatform(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.query.platform) {
+                this.clientError(res, "Error: Gaming platform was not provided. Please provide one");
+                return;
+            }
+            else {
+                try {
+                    //* getting game data from IGN database based on provided platform
+                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE platform='${req.query.platform}'`)).rows;
+                    this.ok(res, queryResult);
+                }
+                catch (error) {
+                    this.clientError(res, error.toString());
+                }
+            }
+        });
+    }
+    /**
+     * @description get all games in ascending order by title
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getAllGamesAscending(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const queryResult = (yield this.query(`SELECT * FROM reviews order by title`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
+            }
+        });
+    }
+    /**
+     * @description get games by release year
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getGamesByYear(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.query.year) {
+                this.clientError(res, "Error: Game release year was not provided. Please provide one");
+                return;
+            }
+            else {
+                try {
+                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ReleaseYear='${req.query.year}' `)).rows;
+                    this.ok(res, queryResult);
+                }
+                catch (error) {
+                    this.clientError(res, error.toString());
+                }
+            }
+        });
+    }
+    /**
+     * @description get games by exact release date
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getGamesByDate(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if ((!req.query.year) || (!req.query.date) || (!req.query.month)) {
+                this.clientError(res, "Error: Either release year, date, or month was not provided. Please provide them");
+                return;
+            }
+            else {
+                try {
+                    const queryResult = (yield this.query(`SELECT * FROM reviews
+                                    WHERE ReleaseYear='${req.query.year}' AND ReleaseMonth='${req.query.month}' AND ReleaseDay='${req.query.date}' `)).rows;
+                    this.ok(res, queryResult);
+                }
+                catch (error) {
+                    this.clientError(res, error.toString());
+                }
+            }
+        });
+    }
+    /**
+     * @description get games by month
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getGamesByMonth(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.query.month) {
+                this.clientError(res, "Error: Month was not provided. Please provide one");
+                return;
+            }
+            else {
+                try {
+                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ReleaseMonth='${req.query.month}'`)).rows;
+                    this.ok(res, queryResult);
+                }
+                catch (error) {
+                    this.clientError(res, error.toString());
+                }
+            }
+        });
+    }
+    /**
+     * @description get games by genre
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getGamesByGenre(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.query.genre) {
+                this.clientError(res, "Error: Genre was not provided. Please provide one");
+                return;
+            }
+            else {
+                try {
+                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE genre='${req.query.genre}'`)).rows;
+                    this.ok(res, queryResult);
+                }
+                catch (error) {
+                    this.clientError(res, error.toString());
+                }
+            }
+        });
+    }
+    /**
+     * @description get all possible score phrases
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getScorePhrases(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const queryResult = (yield this.query('select DISTINCT ScorePhrase from reviews;')).rows.map(entry => entry.scorephrase);
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
+    /**
+     * @description get games by score phrase
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getGamesByScorePhrase(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.query.scorephrase) {
+                this.clientError(res, "Error: Score phrase was not provided. Please provide one");
+                return;
+            }
+            else {
+                try {
+                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ScorePhrase='${req.query.scorephrase}'`)).rows;
+                    this.ok(res, queryResult);
+                }
+                catch (error) {
+                    this.clientError(res, error.toString());
+                }
+            }
+        });
+    }
+    /**
+     * @description get games by exact rating
+     * @author Jigar Patel
+     * @date 2020-12-04
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    getGamesByRating(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.query.rating) {
+                this.clientError(res, "Error: Rating was not provided. Please provide one");
+                return;
+            }
+            else {
+                try {
+                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE Score='${req.query.rating}'`)).rows;
+                    this.ok(res, queryResult);
+                }
+                catch (error) {
+                    this.clientError(res, error.toString());
+                }
+            }
+        });
+    }
 }
 __decorate([
     Controller_1.Post("/query")
@@ -141,10 +376,40 @@ __decorate([
     Controller_1.Get("/genres")
 ], Postgres.prototype, "genres", null);
 __decorate([
+    Controller_1.Get("/platforms")
+], Postgres.prototype, "getPlatforms", null);
+__decorate([
     Controller_1.Get("/games/top/:num")
 ], Postgres.prototype, "topGames", null);
 __decorate([
     Controller_1.Get("/search")
 ], Postgres.prototype, "getReviews", null);
+__decorate([
+    Controller_1.Get("/games/platform")
+], Postgres.prototype, "getGamesByPlatform", null);
+__decorate([
+    Controller_1.Get("/games/all")
+], Postgres.prototype, "getAllGamesAscending", null);
+__decorate([
+    Controller_1.Get("/games/year")
+], Postgres.prototype, "getGamesByYear", null);
+__decorate([
+    Controller_1.Get("/games/date")
+], Postgres.prototype, "getGamesByDate", null);
+__decorate([
+    Controller_1.Get("/games/month")
+], Postgres.prototype, "getGamesByMonth", null);
+__decorate([
+    Controller_1.Get("/games/genre")
+], Postgres.prototype, "getGamesByGenre", null);
+__decorate([
+    Controller_1.Get("/scorephrases")
+], Postgres.prototype, "getScorePhrases", null);
+__decorate([
+    Controller_1.Get("/games/scorephrase")
+], Postgres.prototype, "getGamesByScorePhrase", null);
+__decorate([
+    Controller_1.Get("/games/rating")
+], Postgres.prototype, "getGamesByRating", null);
 exports.Postgres = Postgres;
 //# sourceMappingURL=Postgres.js.map
