@@ -1,0 +1,17 @@
+<div>
+    {{#if user}}
+    <div>
+        <h2>Welcome {{user.firstName}}! Please pick a Review dataset!</h2> 
+        <div>
+            TODO
+        </div>
+    </div>
+    
+   {{^}}
+    <div>
+            <h2> Please login or register!</h2>
+            <a href="/login"> Login </a>
+            <a href="/register"> Register </a> 
+    </div>
+   {{/if}}
+</div>
