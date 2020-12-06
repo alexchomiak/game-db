@@ -59,8 +59,6 @@ const utils_1 = require("./util/utils");
 const Auth_1 = require("./controllers/Auth");
 const redis = __importStar(require("redis"));
 const Postgres_1 = require("./controllers/Postgres");
-const express_handlebars_1 = __importDefault(require("express-handlebars"));
-const path_1 = __importDefault(require("path"));
 const pg_1 = __importDefault(require("pg"));
 class App {
     constructor(port, basePath, serviceName) {
@@ -168,14 +166,6 @@ class App {
                     }
                 });
             });
-            // * Setup Handlebars
-            __classPrivateFieldGet(this, _app).engine('hbs', express_handlebars_1.default({
-                layoutsDir: path_1.default.join(__dirname, 'views/layouts/'),
-                defaultLayout: "index",
-                extname: '.hbs'
-            }));
-            __classPrivateFieldGet(this, _app).set('views', path_1.default.join(__dirname, 'views'));
-            __classPrivateFieldGet(this, _app).set('view engine', 'hbs');
             // * Create PostgresSQL client
             yield new Promise((res) => {
                 const pool = new pg_1.default.Pool({

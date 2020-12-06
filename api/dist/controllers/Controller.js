@@ -132,9 +132,6 @@ class Controller {
     unauthorized(response, message) {
         Controller.jsonResponse(response, 401, message ? message : 'Unauthorized');
     }
-    paymentRequired(response, message) {
-        Controller.jsonResponse(response, 402, message ? message : 'Payment required');
-    }
     forbidden(response, message) {
         Controller.jsonResponse(response, 403, message ? message : 'Forbidden');
     }
