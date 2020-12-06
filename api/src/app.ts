@@ -15,7 +15,6 @@ import { Middleware, clean } from './util/utils'
 import { Auth } from './controllers/Auth'
 import * as redis from 'redis'
 import {  Postgres } from './controllers/Postgres'
-import handlebars from 'express-handlebars'
 import path from 'path'
 import pg from 'pg'
 
@@ -140,17 +139,6 @@ export default class App {
                 }
             })
         })
-
-        // * Setup Handlebars
-        this.#app.engine('hbs', handlebars({
-            layoutsDir:path.join(__dirname , 'views/layouts/'),
-            defaultLayout: "index",
-            extname: '.hbs'
-        }))
-        this.#app.set('views', path.join(__dirname , 'views'));
-
-        this.#app.set('view engine', 'hbs')
-
         
         // * Create PostgresSQL client
         await new Promise<void>((res) => {

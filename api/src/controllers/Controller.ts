@@ -161,10 +161,6 @@ export abstract class Controller {
         Controller.jsonResponse(response, 401, message ? message : 'Unauthorized')
     }
 
-    public paymentRequired(response: Response, message?: string) {
-        Controller.jsonResponse(response, 402, message ? message : 'Payment required')
-    }
-
     public forbidden(response: Response, message?: string) {
         Controller.jsonResponse(response, 403, message ? message : 'Forbidden')
     }
