@@ -1,7 +1,10 @@
 import React, { FC, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Tab, Tabs } from "react-bootstrap";
 import { AuthForm } from "../components/AuthForm";
+import { login, register } from "../redux/splices/auth";
 export const Auth: FC = () => {
+  const dispatch = useDispatch();
   return (
     <>
       <Tabs defaultActiveKey="login">
@@ -9,7 +12,7 @@ export const Auth: FC = () => {
           <AuthForm
             type="login"
             onSubmit={async (e) => {
-              // TODO: write post request
+              dispatch(login(e));
             }}
           ></AuthForm>
         </Tab>
@@ -17,7 +20,7 @@ export const Auth: FC = () => {
           <AuthForm
             type="register"
             onSubmit={async (e) => {
-              // TODO: write post request
+              dispatch(register(e));
             }}
           ></AuthForm>
         </Tab>

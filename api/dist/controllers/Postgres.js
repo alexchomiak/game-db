@@ -423,7 +423,9 @@ class Postgres extends Controller_1.Controller {
                 return;
             }
             try {
-                const queryResult = (yield this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}', '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows;
+                const queryResult = (yield this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
+                                                   ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
+                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows;
                 this.ok(res, queryResult);
             }
             catch (err) {

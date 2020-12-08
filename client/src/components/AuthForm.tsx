@@ -1,5 +1,6 @@
 import React, { useState, FC } from "react";
 import {
+  Button,
   Form,
   FormControl,
   FormGroup,
@@ -7,7 +8,7 @@ import {
   Tab,
   Tabs,
 } from "react-bootstrap";
-interface AuthCreds {
+export interface AuthCreds {
   email: string;
   password: string;
   firstName?: string;
@@ -64,6 +65,19 @@ export const AuthForm: FC<AuthFormProps> = ({ type, onSubmit }) => {
             onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
           ></FormControl>
         </FormGroup>
+
+        <Button
+          onClick={(e) => {
+            onSubmit({
+              email,
+              password,
+              firstName,
+              lastName,
+            });
+          }}
+        >
+          {type === "register" ? "Register" : "Login"}
+        </Button>
       </Form>
     </>
   );
