@@ -164,7 +164,7 @@ export default class App {
             })
         await connection.connect()
         
-     
+            
 
         // * Bind middlewares
         this.bindMiddlewares(middlewares)
