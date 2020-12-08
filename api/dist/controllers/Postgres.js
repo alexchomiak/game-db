@@ -382,6 +382,55 @@ class Postgres extends Controller_1.Controller {
             }
         });
     }
+    /**
+     * @description update game score phrase by id. Clients will have game data rendered but id will be hidden from UI
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    updateScorePhrase(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, score_phrase } = req.body;
+            if (!id || !score_phrase) {
+                this.clientError(res, "Error: Either id or score_phrase was not provided. Please provide them");
+                return;
+            }
+            try {
+                const queryResult = (yield this.query(`UPDATE reviews set ScorePhrase = '${score_phrase}' WHERE id='${id}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
+    /**
+     * @description post request to add a new game to the ign database
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    addGame(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = req.body;
+            console.log(req.body);
+            if (!id || !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day) {
+                this.clientError(res, "Error: Not all fields were not provided. Please provide them");
+                return;
+            }
+            try {
+                const queryResult = (yield this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}', '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
 }
 __decorate([
     Controller_1.Post("/query")
@@ -426,7 +475,13 @@ __decorate([
     Controller_1.Get("/games/rating")
 ], Postgres.prototype, "getGamesByRating", null);
 __decorate([
-    Controller_1.Post("/games/update")
+    Controller_1.Post("/games/update_rating") // fixme: look up rest standards & change this as necessary
 ], Postgres.prototype, "updateGame", null);
+__decorate([
+    Controller_1.Post("/games/update_score_phrase")
+], Postgres.prototype, "updateScorePhrase", null);
+__decorate([
+    Controller_1.Post("/games/add")
+], Postgres.prototype, "addGame", null);
 exports.Postgres = Postgres;
 //# sourceMappingURL=Postgres.js.map

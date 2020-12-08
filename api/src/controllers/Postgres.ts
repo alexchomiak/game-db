@@ -377,7 +377,7 @@ export class Postgres extends Controller {
      * @param {Response} res
      * @memberof Postgres
      */ 
-     @Post("/games/update")
+     @Post("/games/update_rating") // fixme: look up rest standards & change this as necessary
      async updateGame(req: Request, res: Response) {
          const {id, rating} = req.body
 
@@ -397,6 +397,68 @@ export class Postgres extends Controller {
      }     
 
 
+    /**
+     * @description update game score phrase by id. Clients will have game data rendered but id will be hidden from UI
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */      
+    @Post("/games/update_score_phrase")
+    async updateScorePhrase(req: Request, res: Response) {
+        const {id, score_phrase} = req.body
+
+        if(!id || !score_phrase){
+           this.clientError(res, "Error: Either id or score_phrase was not provided. Please provide them")
+           return;
+        }
+
+        try {
+            const queryResult = (await this.query(`UPDATE reviews set ScorePhrase = '${score_phrase}' WHERE id='${id}'`)).rows 
+            this.ok(res, queryResult)
+        }
+        catch(err) {
+            this.clientError(res, err.toString())
+        }
+
+    }    
+
+
+
+    /**
+     * @description post request to add a new game to the ign database
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */     
+    @Post("/games/add")
+    async addGame(req: Request, res: Response) {
+        const {id, score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = req.body
+
+        console.log(req.body);
+
+        if(!id || !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day){
+            this.clientError(res, "Error: Not all fields were not provided. Please provide them")
+            return;
+        }
+
+        try {        
+            const queryResult = (await this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
+                                                   ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
+                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows 
+                                                   
+            this.ok(res, queryResult)
+        }
+        catch(err) {
+            this.clientError(res, err.toString())
+        }
+
+    } 
+
+
 
     /*
     
@@ -404,16 +466,17 @@ export class Postgres extends Controller {
 
     update query ideas
         - update rating
-        - update score_phrase
-        - update editors_choice
+        - update score_phrase - 15
     
     insert 
-        - add a new game review
+        - add a new game review - 10
 
     refractor
         - removed else syntax for readability
         - requiring req.body data for post requests
         - for initial queries: putting queries in a seperate variable for readability
+
+    note to team: I'm just doing some of these random queries since deitz wanted various CRUD operations
 
     */
     
