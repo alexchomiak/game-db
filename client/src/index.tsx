@@ -14,15 +14,15 @@ import { Provider } from "react-redux";
 // * Check for user in local storage
 const serializedUser = localStorage.getItem("user");
 if (serializedUser && serializedUser != "") {
-  const user = JSON.parse(serializedUser);
-  store.dispatch(setUser(user));
+    const user = JSON.parse(serializedUser);
+    store.dispatch(setUser(user));
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </Provider>,
-  document.getElementById("root")
+    <Provider store={store}>
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </Provider>,
+    document.getElementById("root")
 );

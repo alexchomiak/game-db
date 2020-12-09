@@ -1,10 +1,10 @@
 import {
-  combineReducers,
-  configureStore,
-  ThunkAction,
-  Action,
-  ThunkDispatch,
-  getDefaultMiddleware,
+    combineReducers,
+    configureStore,
+    ThunkAction,
+    Action,
+    ThunkDispatch,
+    getDefaultMiddleware,
 } from "@reduxjs/toolkit";
 import auth from "./splices/auth";
 
@@ -15,8 +15,8 @@ export type RootState = ReturnType<typeof rootReducer>;
 
 // * Configure Store
 const store = configureStore({
-  middleware: getDefaultMiddleware(),
-  reducer: rootReducer,
+    middleware: getDefaultMiddleware(),
+    reducer: rootReducer,
 });
 
 export type AppDispatch = typeof store.dispatch;
