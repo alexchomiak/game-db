@@ -80,7 +80,8 @@ class Postgres extends Controller_1.Controller {
     genres(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                this.ok(res, (yield this.query('select DISTINCT genre from reviews;')).rows.map(entry => entry.genre));
+                const queryResult = (yield this.query('select DISTINCT genre from reviews;')).rows.map(entry => entry.genre);
+                this.ok(res, queryResult);
             }
             catch (err) {
                 this.clientError(res, err.toString());
@@ -116,12 +117,16 @@ class Postgres extends Controller_1.Controller {
      */
     topGames(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!req.params.num) {
+                this.clientError(res, "Error: Request param num was not provided. Please provide one");
+            }
             try {
-                this.ok(res, (yield this.query(`select Title, AVG(score) as AverageScore, Genre, EditorsChoice, ReleaseYear from reviews 
-                    ${req.query.genre ? `WHERE genre='${req.query.genre}' ` : ''}
-                    group by title, genre, editorschoice, releaseyear 
-                    order by AVG(score) desc, releaseyear desc, title desc 
-                    limit ${req.params.num};`)).rows);
+                const queryResult = (yield this.query(`select Title, AVG(score) as AverageScore, Genre, EditorsChoice, ReleaseYear from reviews 
+                ${req.query.genre ? `WHERE genre='${req.query.genre}' ` : ''}
+                group by title, genre, editorschoice, releaseyear 
+                order by AVG(score) desc, releaseyear desc, title desc 
+                limit ${req.params.num};`)).rows;
+                this.ok(res, queryResult);
             }
             catch (err) {
                 this.clientError(res, err.toString());
@@ -142,14 +147,12 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "You must specify a text query q to obtain reviews for");
                 return;
             }
-            else {
-                console.log(req.query.q);
-                try {
-                    this.ok(res, (yield this.query(`select * from reviews where title like '%${req.query.q}%' order by score desc`)).rows);
-                }
-                catch (err) {
-                    this.clientError(res, err.toString());
-                }
+            try {
+                const queryResult = (yield this.query(`select * from reviews where title like '%${req.query.q}%' order by score desc`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
             }
         });
     }
@@ -167,15 +170,13 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "Error: Gaming platform was not provided. Please provide one");
                 return;
             }
-            else {
-                try {
-                    //* getting game data from IGN database based on provided platform
-                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE platform='${req.query.platform}'`)).rows;
-                    this.ok(res, queryResult);
-                }
-                catch (error) {
-                    this.clientError(res, error.toString());
-                }
+            try {
+                //* getting game data from IGN database based on provided platform
+                const queryResult = (yield this.query(`SELECT * FROM reviews WHERE platform='${req.query.platform}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
             }
         });
     }
@@ -212,14 +213,12 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "Error: Game release year was not provided. Please provide one");
                 return;
             }
-            else {
-                try {
-                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ReleaseYear='${req.query.year}' `)).rows;
-                    this.ok(res, queryResult);
-                }
-                catch (error) {
-                    this.clientError(res, error.toString());
-                }
+            try {
+                const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ReleaseYear='${req.query.year}' `)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
             }
         });
     }
@@ -237,15 +236,14 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "Error: Either release year, date, or month was not provided. Please provide them");
                 return;
             }
-            else {
-                try {
-                    const queryResult = (yield this.query(`SELECT * FROM reviews
-                                    WHERE ReleaseYear='${req.query.year}' AND ReleaseMonth='${req.query.month}' AND ReleaseDay='${req.query.date}' `)).rows;
-                    this.ok(res, queryResult);
-                }
-                catch (error) {
-                    this.clientError(res, error.toString());
-                }
+            try {
+                const queryResult = (yield this.query(`SELECT * FROM reviews
+                                  WHERE ReleaseYear='${req.query.year}' AND ReleaseMonth='${req.query.month}'
+                                  AND ReleaseDay='${req.query.date}' `)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
             }
         });
     }
@@ -263,14 +261,12 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "Error: Month was not provided. Please provide one");
                 return;
             }
-            else {
-                try {
-                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ReleaseMonth='${req.query.month}'`)).rows;
-                    this.ok(res, queryResult);
-                }
-                catch (error) {
-                    this.clientError(res, error.toString());
-                }
+            try {
+                const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ReleaseMonth='${req.query.month}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
             }
         });
     }
@@ -288,14 +284,12 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "Error: Genre was not provided. Please provide one");
                 return;
             }
-            else {
-                try {
-                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE genre='${req.query.genre}'`)).rows;
-                    this.ok(res, queryResult);
-                }
-                catch (error) {
-                    this.clientError(res, error.toString());
-                }
+            try {
+                const queryResult = (yield this.query(`SELECT * FROM reviews WHERE genre='${req.query.genre}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
             }
         });
     }
@@ -332,14 +326,12 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "Error: Score phrase was not provided. Please provide one");
                 return;
             }
-            else {
-                try {
-                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ScorePhrase='${req.query.scorephrase}'`)).rows;
-                    this.ok(res, queryResult);
-                }
-                catch (error) {
-                    this.clientError(res, error.toString());
-                }
+            try {
+                const queryResult = (yield this.query(`SELECT * FROM reviews WHERE ScorePhrase='${req.query.scorephrase}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
             }
         });
     }
@@ -357,14 +349,87 @@ class Postgres extends Controller_1.Controller {
                 this.clientError(res, "Error: Rating was not provided. Please provide one");
                 return;
             }
-            else {
-                try {
-                    const queryResult = (yield this.query(`SELECT * FROM reviews WHERE Score='${req.query.rating}'`)).rows;
-                    this.ok(res, queryResult);
-                }
-                catch (error) {
-                    this.clientError(res, error.toString());
-                }
+            try {
+                const queryResult = (yield this.query(`SELECT * FROM reviews WHERE Score='${req.query.rating}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (error) {
+                this.clientError(res, error.toString());
+            }
+        });
+    }
+    /**
+     * @description Post request to update game rating by id. Clients will have game data rendered but id will be hidden from UI
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    updateGame(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, rating } = req.body;
+            if (!id || !rating) {
+                this.clientError(res, "Error: Either id or rating was not provided. Please provide them");
+                return;
+            }
+            try {
+                const queryResult = (yield this.query(`UPDATE reviews set Score = '${rating}' WHERE id='${id}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
+    /**
+     * @description update game score phrase by id. Clients will have game data rendered but id will be hidden from UI
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    updateScorePhrase(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, score_phrase } = req.body;
+            if (!id || !score_phrase) {
+                this.clientError(res, "Error: Either id or score_phrase was not provided. Please provide them");
+                return;
+            }
+            try {
+                const queryResult = (yield this.query(`UPDATE reviews set ScorePhrase = '${score_phrase}' WHERE id='${id}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
+    /**
+     * @description post request to add a new game to the ign database
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    addGame(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = req.body;
+            console.log(req.body);
+            if (!id || !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day) {
+                this.clientError(res, "Error: Not all fields were not provided. Please provide them");
+                return;
+            }
+            try {
+                const queryResult = (yield this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
+                                                   ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
+                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
             }
         });
     }
@@ -411,5 +476,14 @@ __decorate([
 __decorate([
     Controller_1.Get("/games/rating")
 ], Postgres.prototype, "getGamesByRating", null);
+__decorate([
+    Controller_1.Post("/games/update_rating") // fixme: look up rest standards & change this as necessary
+], Postgres.prototype, "updateGame", null);
+__decorate([
+    Controller_1.Post("/games/update_score_phrase")
+], Postgres.prototype, "updateScorePhrase", null);
+__decorate([
+    Controller_1.Post("/games/add")
+], Postgres.prototype, "addGame", null);
 exports.Postgres = Postgres;
 //# sourceMappingURL=Postgres.js.map
