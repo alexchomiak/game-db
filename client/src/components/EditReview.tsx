@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react'
-import {Modal, FormGroup, FormControl, ModalBody, ModalDialog, ModalHeader, ModalTitle, Button } from 'react-bootstrap'
+import {Modal, FormGroup, FormControl, ModalTitle, Button } from 'react-bootstrap'
 import { ignGame } from '../types/ign'
 
 interface EditReviewProps {
