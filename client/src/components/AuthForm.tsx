@@ -4,7 +4,6 @@ import {
     Form,
     FormControl,
     FormGroup,
-    Label,
     Tab,
     Tabs,
 } from "react-bootstrap";
