@@ -9,10 +9,19 @@ import { EditReview } from "../components/EditReview";
 
 export const Postgres: FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [previousSearchQuery, setPreviousSearchQuery] = useState<string>(".")
+    const [previousSearchQuery, setPreviousSearchQuery] = useState<string>(".");
     const [searchResults, setSearchResults] = useState<ignGame[]>([]);
     const [topGames, setTopGames] = useState<topIgnGame[]>([]);
-    const [currentEdit, setCurrentEdit] = useState<ignGame | null>(null)
+    const [currentEdit, setCurrentEdit] = useState<ignGame | null>(null);
+
+    const updateSearchResults = async () => {
+        const { data: games } = await axios.get(
+            `/api/pg/search?q=${encodeURI(searchQuery)}`
+        );
+        setPreviousSearchQuery(searchQuery);
+
+        setSearchResults(games.splice(0, 12));
+    }
     useEffect(() => {
         if (topGames.length == 0) {
             (async () => {
@@ -25,22 +34,13 @@ export const Postgres: FC = () => {
     useEffect(() => {
         const i = setInterval(() => {
             if (searchQuery.length >= 3 && searchQuery != previousSearchQuery) {
-
-                            ;(async () => {
-                                console.log(searchQuery, previousSearchQuery)
-                                const { data: games } = await axios.get(
-                                    `/api/pg/search?q=${encodeURI(searchQuery)}`
-                                );
-                                setPreviousSearchQuery(searchQuery);
-
-                                setSearchResults(games.splice(0,12));
-                            })();
-                        }
-        }, 100)
+                updateSearchResults()
+            }
+        }, 100);
         return () => {
-            clearInterval(i)
-        }   
-    }, [searchQuery, previousSearchQuery])
+            clearInterval(i);
+        };
+    }, [searchQuery, previousSearchQuery]);
     // useEffect(() => {
     //     let t = setTimeout(() => {
     //         setTimer(timer + 1)
@@ -82,12 +82,28 @@ export const Postgres: FC = () => {
 
     return (
         <>
-            {currentEdit != null && <EditReview game={currentEdit} open={currentEdit != null} onSubmit={(edit) => {
-                if(edit != null) {
-                    console.log(edit)
-                }
-                setCurrentEdit(null)
-            }}/>}
+            {currentEdit != null && (
+                <EditReview
+                    game={currentEdit}
+                    open={currentEdit != null}
+                    onSubmit={async (edit) => {
+                        if (edit != null) {
+                            console.log(edit);
+
+                            try {
+                                await axios.post("/api/pg/update", {
+                                    review: edit,
+                                });
+                                                updateSearchResults()
+
+                            } catch (err) {
+                                alert("updating err");
+                            }
+                        }
+                        setCurrentEdit(null);
+                    }}
+                />
+            )}
             <h2>Search Dataset by Game Name</h2>
             <FormGroup>
                 <FormControl
@@ -100,7 +116,12 @@ export const Postgres: FC = () => {
             </FormGroup>
             <div className="container-fluid">
                 <div className="row justify-content-between">
-                    {searchResults.map((res) => (<IgnReview onEdit={() => setCurrentEdit(res)} game={res}/>))}
+                    {searchResults.map((res) => (
+                        <IgnReview
+                            onEdit={() => setCurrentEdit(res)}
+                            game={res}
+                        />
+                    ))}
                 </div>
             </div>
             <h2>Top 25 Reviewed Games In The Datasets</h2>
