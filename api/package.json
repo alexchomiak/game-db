@@ -21,7 +21,10 @@
         "serve-debug": "nodemon --inspect dist/server.js",
         "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold\"  \"npm run watch-ts\" \"npm run serve-debug\"",
         "test": "ts-node src/tests/index.ts",
-        "test-watch": "nodemon --watch 'src/tests/**' --ext 'ts' --exec 'ts-node src/tests/index.ts'"
+        "test-watch": "nodemon --watch 'src/tests/**' --ext 'ts' --exec 'ts-node src/tests/index.ts'",
+        "pm2": "pm2 --name cs480-api start npm -- start",
+        "pm2-stop": "pm2 del cs480-api",
+	"import-data": "node import-data.js"
     },
     "dependencies": {
         "@types/axios": "^0.14.0",
