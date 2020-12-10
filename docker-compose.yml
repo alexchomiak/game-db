@@ -8,7 +8,6 @@ services:
       - api-net
     volumes:
       - data:/var/lib/redis
-      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - 6379:6379
 
