@@ -148,7 +148,7 @@ export class Postgres extends Controller {
         } 
                     
         try {
-            const queryResult = (await this.query(`select * from reviews where title like '%${req.query.q}%' order by score desc`)).rows
+            const queryResult = (await this.query(`select * from reviews where LOWER(title) like '%${(req.query.q as string).toLowerCase()}%' order by score desc`)).rows
             this.ok(res, queryResult)
         }
         catch(err) {

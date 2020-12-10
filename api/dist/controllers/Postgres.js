@@ -148,7 +148,7 @@ class Postgres extends Controller_1.Controller {
                 return;
             }
             try {
-                const queryResult = (yield this.query(`select * from reviews where title like '%${req.query.q}%' order by score desc`)).rows;
+                const queryResult = (yield this.query(`select * from reviews where LOWER(title) like '%${req.query.q.toLowerCase()}%' order by score desc`)).rows;
                 this.ok(res, queryResult);
             }
             catch (err) {
