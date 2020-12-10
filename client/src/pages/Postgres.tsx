@@ -5,14 +5,14 @@ import { ignGame, topIgnGame } from "../types/ign";
 import { clearInterval, clearTimeout, setInterval } from "timers";
 import { FormGroup, FormControl } from "react-bootstrap";
 import { IgnReview } from "../components/IgnReview";
+import { EditReview } from "../components/EditReview";
 
 export const Postgres: FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [previousSearchQuery, setPreviousSearchQuery] = useState<string>(".")
     const [searchResults, setSearchResults] = useState<ignGame[]>([]);
     const [topGames, setTopGames] = useState<topIgnGame[]>([]);
-    const [intervalMounted, setIntervalMounted] = useState<number>(0)
-    const [timer, setTimer] = useState(0)
+    const [currentEdit, setCurrentEdit] = useState<ignGame | null>(null)
     useEffect(() => {
         if (topGames.length == 0) {
             (async () => {
@@ -82,6 +82,12 @@ export const Postgres: FC = () => {
 
     return (
         <>
+            {currentEdit != null && <EditReview game={currentEdit} open={currentEdit != null} onSubmit={(edit) => {
+                if(edit != null) {
+                    console.log(edit)
+                }
+                setCurrentEdit(null)
+            }}/>}
             <h2>Search Dataset by Game Name</h2>
             <FormGroup>
                 <FormControl
@@ -94,7 +100,7 @@ export const Postgres: FC = () => {
             </FormGroup>
             <div className="container-fluid">
                 <div className="row justify-content-between">
-                    {searchResults.map((res) => (<IgnReview game={res}/>))}
+                    {searchResults.map((res) => (<IgnReview onEdit={() => setCurrentEdit(res)} game={res}/>))}
                 </div>
             </div>
             <h2>Top 25 Reviewed Games In The Datasets</h2>

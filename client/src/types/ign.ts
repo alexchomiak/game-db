@@ -1,6 +1,7 @@
 export interface ignGame {
+    id: string,
     title: string,
-    score_phrase: string,
+    scorephrase: string,
     url: string,
     platform: string,
     score: number,
