@@ -16,6 +16,7 @@ Jigar Patel
 - Start up docker for DB servers: `docker-compose up -d`
 - Install api dependencies: `npm i --prefix ./api`
 - Build api: `npm run build --prefix ./api`
+- Import data: `npm run import-data pm2 --prefix ./api`
 - Run api service: `npm run pm2 --prefix ./api`
 - Install client dependencies: `npm i --prefix ./client`
 - Build client: `npm run build --prefix ./client`
