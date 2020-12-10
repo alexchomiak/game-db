@@ -6,6 +6,7 @@ import { logout } from "./redux/splices/auth";
 import { RootState } from "./redux/store";
 import { SelectionMenu } from "./pages/SelectionMenu";
 import NavMenu from "./components/NavMenu";
+import { Postgres } from "./pages/Postgres";
 function App() {
     const auth = useSelector((store: RootState) => store.auth);
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ function App() {
                             switch (auth.currentDataset) {
                                 case "pg":
                                     // TODO: Render PG data
-                                    return <> Postgres </>;
+                                    return <> <Postgres/> </>;
                                 default:
                                     return (
                                         <p>Selected {auth.currentDataset} </p>
