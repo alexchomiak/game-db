@@ -169,7 +169,7 @@ export const Postgres: FC = () => {
                     </FormGroup>
 
                     <div className="container-fluid">
-                        <div className="row justify-content-between">
+                        <div className="row">
                             {searchResults.map((res) => (
                                 <IgnReview
                                     onDelete={async (id) => {

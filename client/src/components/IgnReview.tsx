@@ -68,7 +68,7 @@ export const IgnReview: FC<ReviewProps> = ({ game, onEdit, onDelete }) => {
 
                     <Row>
                         <Col>
-                            <Button className="danger" onClick={() => { onDelete(game.id) }} block> Delete Review </Button>
+                            <Button variant="danger" onClick={() => { onDelete(game.id) }} block> Delete Review </Button>
                         </Col>
                     </Row>
 
