@@ -1,30 +1,79 @@
 import React, { FC } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { ignGame } from "../types/ign";
 interface ReviewProps {
     game: ignGame;
-    onEdit?: () => void
+    onEdit?: () => void;
+    onDelete: (id: string) => void
 }
-export const IgnReview: FC<ReviewProps> = ({ game, onEdit }) => {
+export const IgnReview: FC<ReviewProps> = ({ game, onEdit, onDelete }) => {
     return (
-        <div className="card col-md-3" style={{ margin: "1rem" }}>
+        <div className="card col-md-4" style={{ margin: "0rem" }}>
             <div className="card-body">
-                <h5 className="card-title">
-                    {game.title} - <i>{game.genre}</i>
-                </h5>
-                <a href={"https://ign.com" + game.url} target="_blank">
-                    Go to review
-                </a>
-                <p className="card-text">
-                    Review Score: {game.scorephrase}, {game.score}
-                </p>
-                <p className="card-text">
-                    Released: {game.releasemonth}/{game.releaseday}/
-                    {game.releaseyear}
-                </p>
-                <Button onClick={() => {
-                    if(onEdit) onEdit()
-                }}>Edit</Button>
+
+                <Container>
+                    <Row  >
+                        <Col>
+                            <h6 className="card-title">
+                                {game.title} - <i>{game.genre} ({game.platform})</i>
+                            </h6>                        
+                        </Col>                                                                                            
+                    </Row>
+
+
+                    <Row>
+                        <Col>
+                            <a href={"https://ign.com" + game.url} target="_blank">
+                                Go to review
+                            </a>                        
+                        </Col>
+                    </Row>
+
+                    <br/>
+
+                    <Row>
+                        <Col>
+                            <p className="card-text">
+                                Rating Score: {game.score}
+                            </p>
+
+                            <p className="card-text">
+                                Rating Label: {game.scorephrase}
+                            </p>
+
+                        </Col>
+
+                    </Row>
+
+                    <br/>
+
+                    <Row>
+                        <Col>
+                            <p className="card-text">
+                                Released: {game.releasemonth}/{game.releaseday}/
+                                {game.releaseyear}
+                            </p>
+                        </Col>
+                    </Row>
+                    
+                    <br/>
+
+                    <Row>
+                         <Col>
+                             <Button onClick={() => { if(onEdit) onEdit() }} block>Edit</Button>
+                         </Col>                        
+                    </Row>
+
+                    <br/>
+
+                    <Row>
+                        <Col>
+                            <Button className="danger" onClick={() => { onDelete(game.id) }} block> Delete Review </Button>
+                        </Col>
+                    </Row>
+
+                </Container>
+
             </div>
         </div>
     );
