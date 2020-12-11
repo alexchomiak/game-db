@@ -1,10 +1,4 @@
 
-[Alex Chomiak's Write Up]
-
-
-[Clark Chen's Write Up]
-
-
 [Jigar Patel's Write Up]
 
 Overall, the project went well since we were able to come to a consensus on a dataset domain, prioritize various features to develop an MVP (minimal viable product), and collaborate effectively by dividing up the work.
