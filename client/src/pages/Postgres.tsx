@@ -3,9 +3,10 @@ import { useEffect } from "react";
 import axios from "axios";
 import { ignGame, topIgnGame } from "../types/ign";
 import { clearInterval, clearTimeout, setInterval } from "timers";
-import { FormGroup, FormControl } from "react-bootstrap";
+import { FormGroup, FormControl, Button } from "react-bootstrap";
 import { IgnReview } from "../components/IgnReview";
 import { EditReview } from "../components/EditReview";
+import { AddReview } from "../components/AddReview";
 
 export const Postgres: FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -13,6 +14,7 @@ export const Postgres: FC = () => {
     const [searchResults, setSearchResults] = useState<ignGame[]>([]);
     const [topGames, setTopGames] = useState<topIgnGame[]>([]);
     const [currentEdit, setCurrentEdit] = useState<ignGame | null>(null);
+    const [addReview, setAddReview] = useState(false)
 
     const updateSearchResults = async () => {
         const { data: games } = await axios.get(
@@ -41,48 +43,18 @@ export const Postgres: FC = () => {
             clearInterval(i);
         };
     }, [searchQuery, previousSearchQuery]);
-    // useEffect(() => {
-    //     let t = setTimeout(() => {
-    //         setTimer(timer + 1)
-    //         if (searchQuery.length > 0) {
-    //             (async () => {
-    //                 const { data: games } = await axios.get(
-    //                     `/api/pg/search?q=${encodeURI(searchQuery)}`
-    //                 );
-    //                 setSearchResults(games);
-    //             })();
-    //         }
-    //     }, 1000)
-    //     return () => {
-    //         clearTimeout(t)
-    //     }
-    // }, [timer])
-    // useEffect(() => {
-    //     console.log(intervalMounted)
-    //     if(intervalMounted == 0) {
-    //         setIntervalMounted(setInterval(() => {
-    //             console.log(searchQuery)
-
-    //             if (searchQuery.length > 0) {
-    //                 (async () => {
-    //                     const { data: games } = await axios.get(
-    //                         `/api/pg/search?q=${encodeURI(searchQuery)}`
-    //                     );
-    //                     setSearchResults(games);
-    //                 })();
-    //             }
-    //             //@ts-ignore
-    //         }, 1000)._id)
-    //     }
-
-    //     return () => {
-
-    //     }
-    // }, [intervalMounted])
-
     return (
         <>
-            {currentEdit != null && (
+            {addReview && (<AddReview
+                open={addReview}
+                onSubmit={async (review) => {
+                    if(review) {
+                        console.log(review)
+                    }
+                    setAddReview(false)
+                }}
+            />)}
+            {!addReview && currentEdit != null && (
                 <EditReview
                     game={currentEdit}
                     open={currentEdit != null}
@@ -105,6 +77,7 @@ export const Postgres: FC = () => {
                 />
             )}
             <h2>Search Dataset by Game Name</h2>
+            <Button onClick={() => setAddReview(true)}>Add A Review</Button>
             <FormGroup>
                 <FormControl
                     placeholder="Enter Search"
@@ -152,7 +125,7 @@ export const Postgres: FC = () => {
             </div>
 
             <h2>Top Reviewed Games by Genre</h2>
-            <h2>Add your own Review!</h2>
+     
         </>
     );
 };
