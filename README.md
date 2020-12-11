@@ -9,7 +9,7 @@ Clark Chen
 Jigar Patel
 
 ## Install Prerequisite
-- Have the latest version of node and npm install
+- Have the latest version of docker, docker-compose, node and npm install
 - Install pm2 to allow running in the background `npm i pm2 -g`
 
 ## Start the project
