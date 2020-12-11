@@ -27,3 +27,17 @@ Jigar Patel
 - Stop api service: `npm run pm2-stop --prefix ./api`
 - Stop docker for DB servers: `docker-compose down`
 
+## Screenshots
+
+![homepage screenshot](client/src/data/home-page.png)
+
+![search screenshot](client/src/data/search-page.png)
+
+![top25 screenshot](client/src/data/top-25-reviews.png)
+
+![topGenre screenshot](client/src/data/top-reviews-by-genre.png)
+
+
+
+
+
