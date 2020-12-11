@@ -6,6 +6,8 @@ import { clearInterval, clearTimeout, setInterval } from "timers";
 import { FormGroup, FormControl } from "react-bootstrap";
 import { IgnReview } from "../components/IgnReview";
 import { EditReview } from "../components/EditReview";
+import { AddOwnReview } from "../components/AddOwnReview";
+
 
 export const Postgres: FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -132,6 +134,7 @@ export const Postgres: FC = () => {
 
             <h2>Top Reviewed Games by Genre</h2>
             <h2>Add your own Review!</h2>
+            <AddOwnReview/>
         </>
     );
 };

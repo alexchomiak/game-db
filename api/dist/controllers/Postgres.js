@@ -418,14 +418,14 @@ class Postgres extends Controller_1.Controller {
         return __awaiter(this, void 0, void 0, function* () {
             const { id, score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = req.body;
             console.log(req.body);
-            if (!id || !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day) {
-                this.clientError(res, "Error: Not all fields were not provided. Please provide them");
-                return;
-            }
+            // if(!id || !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day){
+            //     this.clientError(res, "Error: Not all fields were not provided. Please provide them")
+            //     return;
+            // }
             try {
                 const queryResult = (yield this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
                                                    ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
-                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows;
+                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `));
                 this.ok(res, queryResult);
             }
             catch (err) {
