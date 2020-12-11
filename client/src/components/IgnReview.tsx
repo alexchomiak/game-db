@@ -3,14 +3,15 @@ import { Button } from "react-bootstrap";
 import { ignGame } from "../types/ign";
 interface ReviewProps {
     game: ignGame;
-    onEdit?: () => void
+    onEdit?: () => void;
+    onDelete: (id: string) => void
 }
-export const IgnReview: FC<ReviewProps> = ({ game, onEdit }) => {
+export const IgnReview: FC<ReviewProps> = ({ game, onEdit, onDelete }) => {
     return (
         <div className="card col-md-3" style={{ margin: "1rem" }}>
             <div className="card-body">
                 <h5 className="card-title">
-                    {game.title} - <i>{game.genre}</i>
+                    {game.title} - <i>{game.genre} ({game.platform})</i>
                 </h5>
                 <a href={"https://ign.com" + game.url} target="_blank">
                     Go to review
@@ -25,6 +26,9 @@ export const IgnReview: FC<ReviewProps> = ({ game, onEdit }) => {
                 <Button onClick={() => {
                     if(onEdit) onEdit()
                 }}>Edit</Button>
+                <Button className="danger" onClick={() => {
+                    onDelete(game.id)
+                }}> Delete Review </Button>
             </div>
         </div>
     );

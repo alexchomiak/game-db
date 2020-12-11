@@ -438,6 +438,28 @@ class Postgres extends Controller_1.Controller {
         });
     }
     /**
+     * @description Deletes a game
+     * @author Alex Chomiak
+     * @date 10/12/2020
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    delete(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.body;
+            if (!id)
+                this.clientError(res, "ID not in request body.");
+            try {
+                console.log("deleting ", id);
+                this.ok(res, yield this.query(`DELETE from reviews where id=${id}`));
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
+    /**
      * @description post request to add a new game to the ign database
      * @author Jigar Patel & Alex Chomiak
      * @date 2020-12-05
@@ -447,19 +469,19 @@ class Postgres extends Controller_1.Controller {
      */
     addGame(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { review } = req.body;
-            const { score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = review;
-            console.log(req.body);
-            if (!score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day) {
+            const { scorephrase, title, url, platform, score, genre, editorschoice, releaseyear, releasemonth, releaseday } = req.body.review;
+            console.log(req.body.review);
+            if (!scorephrase || !title || !url || !platform || !score || !genre || !editorschoice || !releaseyear || !releasemonth || !releaseday) {
                 this.clientError(res, "Error: Not all fields were not provided. Please provide them");
                 return;
             }
+            console.log(req.body);
             try {
                 // * Retreive ID
                 const id = (yield this.query('Select MAX(id) from reviews')).rows[0].max + 1;
                 const queryResult = (yield this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
-                                                   ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
-                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `));
+                                                   ReleaseMonth, ReleaseDay) VALUES('${id}', '${scorephrase}', '${title}', '${url}', '${platform}', '${score}',
+                                                   '${genre}', '${editorschoice}', '${releaseyear}', '${releasemonth}', '${releaseday}') `));
                 this.ok(res, queryResult);
             }
             catch (err) {
@@ -543,6 +565,9 @@ __decorate([
 __decorate([
     Controller_1.Post("/games/update_score_phrase")
 ], Postgres.prototype, "updateScorePhrase", null);
+__decorate([
+    Controller_1.Post("/delete")
+], Postgres.prototype, "delete", null);
 __decorate([
     Controller_1.Post("/add")
 ], Postgres.prototype, "addGame", null);

@@ -17,9 +17,9 @@ export const AddReview: FC<AddReviewProps> = ({open, onSubmit}) => {
         score: 0,
         genre: "",
         editorschoice: false,
-        releaseyear: 2020,
-        releasemonth: 12,
-        releaseday: 1,
+        releaseyear: new Date().getUTCFullYear(),
+        releasemonth: new Date().getUTCMonth() + 1,
+        releaseday: new Date().getUTCDate() - 1,
         scorephrase: "Average"
     });
 

@@ -455,6 +455,26 @@ export class Postgres extends Controller {
 
     }    
 
+    /**
+     * @description Deletes a game
+     * @author Alex Chomiak
+     * @date 10/12/2020
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    @Post("/delete")
+    async delete(req: Request, res: Response) {
+        const {id} = req.body
+        if(!id) this.clientError(res, "ID not in request body.")
+        try {
+            console.log("deleting ", id)
+            this.ok(res, await this.query(`DELETE from reviews where id=${id}`))
+        }
+        catch(err) {
+            this.clientError(res, err.toString())
+        }
+    }
 
 
     /**
@@ -467,22 +487,20 @@ export class Postgres extends Controller {
      */     
     @Post("/add")
     async addGame(req: Request, res: Response) {
-        const {review} = req.body
-        const {score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = review
-
-        console.log(req.body);
-
-        if( !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day){
+        const {scorephrase, title, url, platform, score, genre, editorschoice, releaseyear, releasemonth, releaseday } = req.body.review
+        console.log(req.body.review)
+        if( !scorephrase || !title || !url || !platform || !score || !genre || !editorschoice || !releaseyear || !releasemonth || !releaseday){
             this.clientError(res, "Error: Not all fields were not provided. Please provide them")
             return;
         }
+        console.log(req.body);
 
         try {        
             // * Retreive ID
             const id = (await this.query('Select MAX(id) from reviews')).rows[0].max + 1
             const queryResult = (await this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
-                                                   ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
-                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)) 
+                                                   ReleaseMonth, ReleaseDay) VALUES('${id}', '${scorephrase}', '${title}', '${url}', '${platform}', '${score}',
+                                                   '${genre}', '${editorschoice}', '${releaseyear}', '${releasemonth}', '${releaseday}') `)) 
                                                    
             this.ok(res, queryResult)
         }
