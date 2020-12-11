@@ -3,16 +3,27 @@ import { useEffect } from "react";
 import axios from "axios";
 import { ignGame, topIgnGame } from "../types/ign";
 import { clearInterval, clearTimeout, setInterval } from "timers";
-import { FormGroup, FormControl } from "react-bootstrap";
+import { FormGroup, FormControl, Button } from "react-bootstrap";
 import { IgnReview } from "../components/IgnReview";
 import { EditReview } from "../components/EditReview";
+import { AddReview } from "../components/AddReview";
 
 export const Postgres: FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [previousSearchQuery, setPreviousSearchQuery] = useState<string>(".")
+    const [previousSearchQuery, setPreviousSearchQuery] = useState<string>(".");
     const [searchResults, setSearchResults] = useState<ignGame[]>([]);
     const [topGames, setTopGames] = useState<topIgnGame[]>([]);
-    const [currentEdit, setCurrentEdit] = useState<ignGame | null>(null)
+    const [currentEdit, setCurrentEdit] = useState<ignGame | null>(null);
+    const [addReview, setAddReview] = useState(false)
+
+    const updateSearchResults = async () => {
+        const { data: games } = await axios.get(
+            `/api/pg/search?q=${encodeURI(searchQuery)}`
+        );
+        setPreviousSearchQuery(searchQuery);
+
+        setSearchResults(games.splice(0, 12));
+    }
     useEffect(() => {
         if (topGames.length == 0) {
             (async () => {
@@ -25,70 +36,48 @@ export const Postgres: FC = () => {
     useEffect(() => {
         const i = setInterval(() => {
             if (searchQuery.length >= 3 && searchQuery != previousSearchQuery) {
-
-                            ;(async () => {
-                                console.log(searchQuery, previousSearchQuery)
-                                const { data: games } = await axios.get(
-                                    `/api/pg/search?q=${encodeURI(searchQuery)}`
-                                );
-                                setPreviousSearchQuery(searchQuery);
-
-                                setSearchResults(games.splice(0,12));
-                            })();
-                        }
-        }, 100)
+                updateSearchResults()
+            }
+        }, 100);
         return () => {
-            clearInterval(i)
-        }   
-    }, [searchQuery, previousSearchQuery])
-    // useEffect(() => {
-    //     let t = setTimeout(() => {
-    //         setTimer(timer + 1)
-    //         if (searchQuery.length > 0) {
-    //             (async () => {
-    //                 const { data: games } = await axios.get(
-    //                     `/api/pg/search?q=${encodeURI(searchQuery)}`
-    //                 );
-    //                 setSearchResults(games);
-    //             })();
-    //         }
-    //     }, 1000)
-    //     return () => {
-    //         clearTimeout(t)
-    //     }
-    // }, [timer])
-    // useEffect(() => {
-    //     console.log(intervalMounted)
-    //     if(intervalMounted == 0) {
-    //         setIntervalMounted(setInterval(() => {
-    //             console.log(searchQuery)
-
-    //             if (searchQuery.length > 0) {
-    //                 (async () => {
-    //                     const { data: games } = await axios.get(
-    //                         `/api/pg/search?q=${encodeURI(searchQuery)}`
-    //                     );
-    //                     setSearchResults(games);
-    //                 })();
-    //             }
-    //             //@ts-ignore
-    //         }, 1000)._id)
-    //     }
-
-    //     return () => {
-
-    //     }
-    // }, [intervalMounted])
-
+            clearInterval(i);
+        };
+    }, [searchQuery, previousSearchQuery]);
     return (
         <>
-            {currentEdit != null && <EditReview game={currentEdit} open={currentEdit != null} onSubmit={(edit) => {
-                if(edit != null) {
-                    console.log(edit)
-                }
-                setCurrentEdit(null)
-            }}/>}
+            {addReview && (<AddReview
+                open={addReview}
+                onSubmit={async (review) => {
+                    if(review) {
+                        console.log(review)
+                    }
+                    setAddReview(false)
+                }}
+            />)}
+            {!addReview && currentEdit != null && (
+                <EditReview
+                    game={currentEdit}
+                    open={currentEdit != null}
+                    onSubmit={async (edit) => {
+                        if (edit != null) {
+                            console.log(edit);
+
+                            try {
+                                await axios.post("/api/pg/update", {
+                                    review: edit,
+                                });
+                                                updateSearchResults()
+
+                            } catch (err) {
+                                alert("updating err");
+                            }
+                        }
+                        setCurrentEdit(null);
+                    }}
+                />
+            )}
             <h2>Search Dataset by Game Name</h2>
+            <Button onClick={() => setAddReview(true)}>Add A Review</Button>
             <FormGroup>
                 <FormControl
                     placeholder="Enter Search"
@@ -100,7 +89,12 @@ export const Postgres: FC = () => {
             </FormGroup>
             <div className="container-fluid">
                 <div className="row justify-content-between">
-                    {searchResults.map((res) => (<IgnReview onEdit={() => setCurrentEdit(res)} game={res}/>))}
+                    {searchResults.map((res) => (
+                        <IgnReview
+                            onEdit={() => setCurrentEdit(res)}
+                            game={res}
+                        />
+                    ))}
                 </div>
             </div>
             <h2>Top 25 Reviewed Games In The Datasets</h2>
@@ -131,7 +125,7 @@ export const Postgres: FC = () => {
             </div>
 
             <h2>Top Reviewed Games by Genre</h2>
-            <h2>Add your own Review!</h2>
+     
         </>
     );
 };

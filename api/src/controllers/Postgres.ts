@@ -156,7 +156,30 @@ export class Postgres extends Controller {
         }   
         
     }
+
+    // * UPDATE reviews SET  reviews.scorephrase = 'Okay', reviews.title = 'Hey You, Pikachu Baby!', reviews.url = '/games/hey-you-pikachu/n64-3734', reviews.platform = 'Nintendo 64', reviews.score = '6', reviews.genre = 'Simulation', reviews.editorschoice = 'false', reviews.releaseyear = '2000', reviews.releasemonth = '11', reviews.releaseday = '6' WHERE id = "id"
     
+
+    @Post("/update/")
+    async update(req: Request, res: Response) {
+        const {review} = req.body
+        let update_str = ""
+        const entries =  Object.entries(review)
+        entries.forEach(([key,value], idx) => {
+            if(key == 'id') return 
+            update_str += `${key} = '${value}'`
+            if(idx != entries.length - 1) update_str += ", "
+        })
+        try {
+            console.log(update_str)
+            const queryResult = (await this.query(`UPDATE reviews SET ${update_str} WHERE id=${review.id}`))
+            this.ok(res,queryResult)
+        }
+        catch(err) {
+            this.clientError(res, err.toString())
+        }
+    }
+
     /**
      * @description Search for games by platform
      * @author Jigar Patel

@@ -2,15 +2,26 @@ import React, {FC, useState} from 'react'
 import {Modal, FormGroup, FormControl, ModalTitle, Button } from 'react-bootstrap'
 import { ignGame } from '../types/ign'
 
-interface EditReviewProps {
-    game: ignGame,
+interface AddReviewProps {
     open: boolean,
     onSubmit: (edit: ignGame | null) => void
 }
 
-export const EditReview: FC<EditReviewProps> = ({game, open, onSubmit}) => {
+export const AddReview: FC<AddReviewProps> = ({open, onSubmit}) => {
 
-    const [review, setReview] = useState<ignGame>(game);
+    const [review, setReview] = useState<ignGame>({
+        id: "",
+        title: "",
+        url:"",
+        platform: "",
+        score: 0,
+        genre: "",
+        editorschoice: false,
+        releaseyear: 2020,
+        releasemonth: 12,
+        releaseday: 1,
+        scorephrase: "Average"
+    });
 
     return <div >
         <Modal
@@ -18,7 +29,7 @@ export const EditReview: FC<EditReviewProps> = ({game, open, onSubmit}) => {
             onHide= {() => {}}        >
             <Modal.Header>
                 <ModalTitle>
-                    Edit Review for {review.title}
+                    Add Review for {review.title}
                 </ModalTitle>
             </Modal.Header>
             <Modal.Body>
@@ -47,7 +58,7 @@ export const EditReview: FC<EditReviewProps> = ({game, open, onSubmit}) => {
             <Modal.Footer>
                 <Button onClick={() => {
                     onSubmit(review)
-                }}>Submit Edit</Button>
+                }}>Submit Review</Button>
                 <Button type="danger" onClick={() => {
                     onSubmit(null)
                 }}>Close</Button>
