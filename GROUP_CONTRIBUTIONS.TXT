@@ -1,0 +1,14 @@
+Alex Chomiak
+- Create the basic struction of application (Both api and client)
+- Work on the control code for client
+
+Clark Chen
+- Work on installation documentation
+- Test all dependency in docker, api, and client, also fix error when needed to confirm it work on both Windows and MacOS
+
+Jigar Patel
+- Work on the layout of the client view
+- Work on API query call
+
+Work together
+- Creating and brainstorming the dataset and SQL query we are using in the code
