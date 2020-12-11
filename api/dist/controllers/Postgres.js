@@ -157,6 +157,14 @@ class Postgres extends Controller_1.Controller {
         });
     }
     // * UPDATE reviews SET  reviews.scorephrase = 'Okay', reviews.title = 'Hey You, Pikachu Baby!', reviews.url = '/games/hey-you-pikachu/n64-3734', reviews.platform = 'Nintendo 64', reviews.score = '6', reviews.genre = 'Simulation', reviews.editorschoice = 'false', reviews.releaseyear = '2000', reviews.releasemonth = '11', reviews.releaseday = '6' WHERE id = "id"
+    /**
+     * @description Updates a Review
+     * @author Alex Chomiak
+     * @date 10/12/2020
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { review } = req.body;
@@ -431,7 +439,7 @@ class Postgres extends Controller_1.Controller {
     }
     /**
      * @description post request to add a new game to the ign database
-     * @author Jigar Patel
+     * @author Jigar Patel & Alex Chomiak
      * @date 2020-12-05
      * @param {Request} req
      * @param {Response} res
@@ -439,16 +447,19 @@ class Postgres extends Controller_1.Controller {
      */
     addGame(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = req.body;
+            const { review } = req.body;
+            const { score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = review;
             console.log(req.body);
-            if (!id || !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day) {
+            if (!score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day) {
                 this.clientError(res, "Error: Not all fields were not provided. Please provide them");
                 return;
             }
             try {
+                // * Retreive ID
+                const id = (yield this.query('Select MAX(id) from reviews')).rows[0].max + 1;
                 const queryResult = (yield this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
                                                    ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
-                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows;
+                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `));
                 this.ok(res, queryResult);
             }
             catch (err) {
@@ -497,7 +508,7 @@ __decorate([
     Controller_1.Get("/search")
 ], Postgres.prototype, "getReviews", null);
 __decorate([
-    Controller_1.Post("/update/")
+    Controller_1.Post("/update")
 ], Postgres.prototype, "update", null);
 __decorate([
     Controller_1.Get("/games/platform")
@@ -533,7 +544,7 @@ __decorate([
     Controller_1.Post("/games/update_score_phrase")
 ], Postgres.prototype, "updateScorePhrase", null);
 __decorate([
-    Controller_1.Post("/games/add")
+    Controller_1.Post("/add")
 ], Postgres.prototype, "addGame", null);
 __decorate([
     Controller_1.Post("/games/delete")

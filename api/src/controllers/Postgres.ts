@@ -160,7 +160,15 @@ export class Postgres extends Controller {
     // * UPDATE reviews SET  reviews.scorephrase = 'Okay', reviews.title = 'Hey You, Pikachu Baby!', reviews.url = '/games/hey-you-pikachu/n64-3734', reviews.platform = 'Nintendo 64', reviews.score = '6', reviews.genre = 'Simulation', reviews.editorschoice = 'false', reviews.releaseyear = '2000', reviews.releasemonth = '11', reviews.releaseday = '6' WHERE id = "id"
     
 
-    @Post("/update/")
+    /**
+     * @description Updates a Review
+     * @author Alex Chomiak
+     * @date 10/12/2020
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    @Post("/update")
     async update(req: Request, res: Response) {
         const {review} = req.body
         let update_str = ""
@@ -451,27 +459,30 @@ export class Postgres extends Controller {
 
     /**
      * @description post request to add a new game to the ign database
-     * @author Jigar Patel
+     * @author Jigar Patel & Alex Chomiak
      * @date 2020-12-05
      * @param {Request} req
      * @param {Response} res
      * @memberof Postgres
      */     
-    @Post("/games/add")
+    @Post("/add")
     async addGame(req: Request, res: Response) {
-        const {id, score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = req.body
+        const {review} = req.body
+        const {score_phrase, title, url, platform, score, genre, editors_choice, release_year, release_month, release_day } = review
 
         console.log(req.body);
 
-        if(!id || !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day){
+        if( !score_phrase || !title || !url || !platform || !score || !genre || !editors_choice || !release_year || !release_month || !release_day){
             this.clientError(res, "Error: Not all fields were not provided. Please provide them")
             return;
         }
 
         try {        
+            // * Retreive ID
+            const id = (await this.query('Select MAX(id) from reviews')).rows[0].max + 1
             const queryResult = (await this.query(`INSERT INTO reviews (ID, ScorePhrase, Title, URL, Platform, Score, Genre, EditorsChoice, ReleaseYear, 
                                                    ReleaseMonth, ReleaseDay) VALUES('${id}', '${score_phrase}', '${title}', '${url}', '${platform}', '${score}',
-                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)).rows 
+                                                   '${genre}', '${editors_choice}', '${release_year}', '${release_month}', '${release_day}') `)) 
                                                    
             this.ok(res, queryResult)
         }
