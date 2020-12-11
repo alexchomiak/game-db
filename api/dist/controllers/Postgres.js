@@ -456,6 +456,30 @@ class Postgres extends Controller_1.Controller {
             }
         });
     }
+    /**
+     * @description post request to delete a review by id from ign DB
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */
+    deleteById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.body;
+            if (!id) {
+                this.clientError(res, "Error: id was not provided. Please provide them");
+                return;
+            }
+            try {
+                const queryResult = (yield this.query(`DELETE FROM reviews WHERE id='${id}'`)).rows;
+                this.ok(res, queryResult);
+            }
+            catch (err) {
+                this.clientError(res, err.toString());
+            }
+        });
+    }
 }
 __decorate([
     Controller_1.Post("/query")
@@ -511,5 +535,8 @@ __decorate([
 __decorate([
     Controller_1.Post("/games/add")
 ], Postgres.prototype, "addGame", null);
+__decorate([
+    Controller_1.Post("/games/delete")
+], Postgres.prototype, "deleteById", null);
 exports.Postgres = Postgres;
 //# sourceMappingURL=Postgres.js.map
