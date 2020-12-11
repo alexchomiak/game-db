@@ -459,27 +459,33 @@ export class Postgres extends Controller {
     } 
 
 
+    /**
+     * @description post request to delete a review by id from ign DB
+     * @author Jigar Patel
+     * @date 2020-12-05
+     * @param {Request} req
+     * @param {Response} res
+     * @memberof Postgres
+     */  
+    @Post("/games/delete")
+    async deleteById(req: Request, res: Response) {
+        const {id} = req.body
 
-    /*
-    
-    commit message & PR details
+        if(!id){
+           this.clientError(res, "Error: id was not provided. Please provide them")
+           return;
+        }
 
-    update query ideas
-        - update rating
-        - update score_phrase - 15
-    
-    insert 
-        - add a new game review - 10
+        try {
+            const queryResult = (await this.query(`DELETE FROM reviews WHERE id='${id}'`)).rows 
+            this.ok(res, queryResult)
+        }
+        catch(err) {
+            this.clientError(res, err.toString())
+        }
 
-    refractor
-        - removed else syntax for readability
-        - requiring req.body data for post requests
-        - for initial queries: putting queries in a seperate variable for readability
+    }        
 
-    note to team: I'm just doing some of these random queries since deitz wanted various CRUD operations
-
-    */
-    
 
 
 }
